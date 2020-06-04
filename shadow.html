@@ -28,6 +28,7 @@
 <script>
 
 var scene, camera, renderer, clock, deltaTime, totalTime, text;
+var light, lightSphere;
 
 var arToolkitSource, arToolkitContext;
 
@@ -50,6 +51,8 @@ var initializer = this;
 		this.rotationX = 0;
 		this.rotationY = 0;
 		this.rotationZ = 0;
+		this.dayOfYear = 180;
+		this.hour = 12;
 		this.explode = function() { 
 			// Define render logic ...
 		};
@@ -67,6 +70,8 @@ var initializer = this;
 		gui.add(text, 'rotationX', 0, 5);
 		gui.add(text, 'rotationY', 0, 5);
 		gui.add(text, 'rotationZ', 0, 5);
+		gui.add(text, 'dayOfYear', 0, 365);
+		gui.add(text, 'hour', 0, 23);
 		gui.add(text, 'loadFile').name('Load obj file');
 		//gui.add(text, 'displayOutline');
 		//gui.add(text, 'explode');
@@ -208,30 +213,16 @@ var initializer = this;
 	sceneGroup.add( floorMesh );
 
 	
-	let light = new THREE.PointLight( 0xffffff, 1, 100 );
+	light = new THREE.PointLight( 0xffffff, 1, 100 );
 
-	// Calculate the sun position based on a longitude (location) and hour/day of the year
-	lat = 51.1;
-	yd = 180;
-	h = 15;
-	r = 5.0;
-	let sunP = sunPosition(lat, yd, h, r);
-	sunX = sunP[0];
-	sunY = sunP[1];
-	sunZ = sunP[2];
-	ele = sunP[3];
-	azi = sunP[4];
-	console.log("sun x = " + sunX);
-	console.log("sun y = " + sunY);
-	console.log("sun z = " + sunZ);
-	console.log("sun ele = " + ele);
-	console.log("sun azi = " + azi);
+	//sun pos
 
-	light.position.set( sunX,sunY,sunZ ); // default; light shining from top
+
+
 	light.castShadow = true;
 	sceneGroup.add( light );
 	
-	let lightSphere = new THREE.Mesh(
+	lightSphere = new THREE.Mesh(
 		new THREE.SphereGeometry(0.1),
 		new THREE.MeshBasicMaterial({
 			color: 0xffffff,
@@ -265,7 +256,40 @@ function update()
 		m.rotation.x = text.rotationX;
 		m.rotation.y = text.rotationY;
 		m.rotation.z = text.rotationZ;
+		updateSunPos(light);
 	}
+}
+
+function updateSunPos(lightSource) {
+	// Calculate the sun position based on a longitude (location) and hour/day of the year
+	lat = 51.1;
+	yd = text.dayOfYear;//180;
+	h = text.hour;//15;
+	r = 2.0;
+	let sunP = sunPosition(lat, yd, h, r);
+	sunX = sunP[0];
+	sunY = sunP[1];
+	sunZ = sunP[2];
+	ele = sunP[3];
+
+	var m = markerRoot1.children[1];
+	if(ele < 0.001) {
+		m.castShadow = false;
+	    //m.receiveShadow = false;
+	} else {
+		m.castShadow = true;
+	    //m.receiveShadow = true;
+	}
+
+	azi = sunP[4];
+	//console.log("sun x = " + sunX);
+	//console.log("sun y = " + sunY);
+	//console.log("sun z = " + sunZ);
+	//console.log("sun ele = " + ele);
+	//console.log("sun azi = " + azi);
+	lightSource.position.set( sunX,sunY,sunZ ); // default; light shining from top
+	lightSphere.position.copy( lightSource.position );
+
 }
 
 
