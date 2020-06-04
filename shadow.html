@@ -129,7 +129,7 @@ function initialize()
 	texture.repeat.set(8,1);
 	
 	shadowMesh = new THREE.Mesh( 
-		new THREE.TorusKnotGeometry(0.5, 0.2, 128, 16), // new THREE.SphereBufferGeometry(1, 32, 32), 
+		new THREE.CubeGeometry(1,1,1),//new THREE.TorusKnotGeometry(0.5, 0.2, 128, 16), // new THREE.SphereBufferGeometry(1, 32, 32), 
 		new THREE.MeshLambertMaterial({ map: texture })
 	);
 	shadowMesh.position.y = 1;
