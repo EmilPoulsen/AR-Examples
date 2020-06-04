@@ -6,6 +6,7 @@
 	<script src='js/three.js'></script>
 	<script src='js/OBJLoader.js'></script>
 	<script src='js/MTLLoader.js'></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js"></script>
 	<!-- include jsartookit -->
 	<script src="jsartoolkit5/artoolkit.min.js"></script>
 	<script src="jsartoolkit5/artoolkit.api.js"></script>
@@ -36,6 +37,26 @@ var material1, mesh1;
 
 initialize();
 animate();
+
+function initDatGui() {
+
+var FizzyText = function() {
+	var self = this;
+	this.message = 'dat.gui';
+	this.speed = 0.8;
+	this.displayOutline = false;
+	this.explode = function() { 
+		console.log(self);
+	};
+	// Define render logic ...
+	};
+  var text = new FizzyText();
+  var gui = new dat.GUI();
+  gui.add(text, 'message');
+  gui.add(text, 'speed', -5, 5);
+  gui.add(text, 'displayOutline');
+  gui.add(text, 'explode');
+};
 
 function initialize()
 {
@@ -201,6 +222,7 @@ function initialize()
 	sceneGroup.add( ambientLight );
 	// let helper = new THREE.CameraHelper( light.shadow.camera );
 	// sceneGroup.add( helper );
+	initDatGui();
 }
 
 function update()
