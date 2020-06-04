@@ -27,7 +27,7 @@
 
 <script>
 
-var scene, camera, renderer, clock, deltaTime, totalTime;
+var scene, camera, renderer, clock, deltaTime, totalTime, text;
 
 var arToolkitSource, arToolkitContext;
 
@@ -38,28 +38,36 @@ var material1, mesh1;
 initialize();
 animate();
 
-function initDatGui() {
 
-var FizzyText = function() {
-	var self = this;
-	this.message = 'dat.gui';
-	this.speed = 0.8;
-	this.displayOutline = false;
-	this.explode = function() { 
-		console.log(self);
-	};
-	// Define render logic ...
-	};
-  var text = new FizzyText();
-  var gui = new dat.GUI();
-  gui.add(text, 'message');
-  gui.add(text, 'speed', -5, 5);
-  gui.add(text, 'displayOutline');
-  gui.add(text, 'explode');
-};
+
 
 function initialize()
 {
+var initializer = this;
+	function FizzyText() {
+		var self = this;
+		this.scale = 1;
+		this.rotationX = 0;
+		this.rotationY = 0;
+		this.rotationZ = 0;
+		this.explode = function() { 
+			// Define render logic ...
+		};
+	};
+
+	text = new FizzyText();
+
+	function initDatGui() {
+		var gui = new dat.GUI();
+		//gui.add(text, 'message');
+		gui.add(text, 'scale', 0, 5);
+		gui.add(text, 'rotationX', 0, 5);
+		gui.add(text, 'rotationY', 0, 5);
+		gui.add(text, 'rotationZ', 0, 5);
+		//gui.add(text, 'displayOutline');
+		//gui.add(text, 'explode');
+	};
+	
 	scene = new THREE.Scene();
 				
 	camera = new THREE.Camera();
@@ -168,12 +176,6 @@ function initialize()
 					mesh0 = group.children[0];
 					mesh0.material.side = THREE.DoubleSide;
 					mesh0.position.y = 0.25;
-					mesh0.scale.x = 3;//scale.y = 0.25;
-					mesh0.scale.y = 3;
-					mesh0.scale.z = 3;
-					//mesh0.rotation.x = 0.5;
-					//mesh0.rotation.y = Math.PI/2;//0.5;
-					//mesh0.rotation.z = 0.5;
 					mesh0.castShadow = true;
 					mesh0.receiveShadow = true;
 					//mesh0.scale.set(0.25,0.25,0.25);
@@ -231,7 +233,17 @@ function update()
 	if ( arToolkitSource.ready !== false )
 		arToolkitContext.update( arToolkitSource.domElement );
 		
-	shadowMesh.rotation.y -= 0.01;
+	if(markerRoot1 && markerRoot1.children && markerRoot1.children.length > 0)
+	{
+		var m = markerRoot1.children[1];
+		m.scale.x = text.scale;
+		m.scale.y = text.scale;
+		m.scale.z = text.scale;
+
+		m.rotation.x = text.rotationX;
+		m.rotation.y = text.rotationY;
+		m.rotation.z = text.rotationZ;
+	}
 }
 
 
