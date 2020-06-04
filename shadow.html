@@ -138,15 +138,18 @@ function initialize()
 	
 	new THREE.MTLLoader()
 		.setPath( 'models/' )
-		.load( 'cubetest2.mtl', function ( materials ) {
+		.load( 'ukpav.mtl', function ( materials ) {
 			materials.preload();
 			new THREE.OBJLoader()
-				.setMaterials( materials )
+				//.setMaterials( materials )
 				.setPath( 'models/' )
-				.load( 'cubetest2.obj', function ( group ) {
+				.load( 'ukpav.obj', function ( group ) {
 					mesh0 = group.children[0];
 					mesh0.material.side = THREE.DoubleSide;
 					mesh0.position.y = 0.25;
+					mesh0.scale.x = 3;//scale.y = 0.25;
+					mesh0.scale.y = 3;
+					mesh0.scale.z = 3;
 					//mesh0.rotation.x = 0.5;
 					//mesh0.rotation.y = Math.PI/2;//0.5;
 					//mesh0.rotation.z = 0.5;
