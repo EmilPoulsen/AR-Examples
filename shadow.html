@@ -4,6 +4,8 @@
 	<title>Hello, world!</title>
 	<!-- include three.js library -->
 	<script src='js/three.js'></script>
+	<script src='js/OBJLoader.js'></script>
+	<script src='js/MTLLoader.js'></script>
 	<!-- include jsartookit -->
 	<script src="jsartoolkit5/artoolkit.min.js"></script>
 	<script src="jsartoolkit5/artoolkit.api.js"></script>
@@ -128,14 +130,41 @@ function initialize()
 	texture.wrapT = THREE.RepeatWrapping;
 	texture.repeat.set(8,1);
 	
+
+
+	//salmon <3
+	function onProgress(xhr) { console.log( (xhr.loaded / xhr.total * 100) + '% loaded' ); }
+	function onError(xhr) { console.log( 'An error happened' ); }
+	
+	new THREE.MTLLoader()
+		.setPath( 'models/' )
+		.load( 'cubetest2.mtl', function ( materials ) {
+			materials.preload();
+			new THREE.OBJLoader()
+				.setMaterials( materials )
+				.setPath( 'models/' )
+				.load( 'cubetest2.obj', function ( group ) {
+					mesh0 = group.children[0];
+					mesh0.material.side = THREE.DoubleSide;
+					mesh0.position.y = 0.25;
+					mesh0.castShadow = true;
+					mesh0.receiveShadow = true;
+					//mesh0.scale.set(0.25,0.25,0.25);
+					markerRoot1.add(mesh0);
+				}, onProgress, onError );
+		});
+
+	//vanilla cube
 	shadowMesh = new THREE.Mesh( 
 		new THREE.CubeGeometry(1,1,1),//new THREE.TorusKnotGeometry(0.5, 0.2, 128, 16), // new THREE.SphereBufferGeometry(1, 32, 32), 
 		new THREE.MeshLambertMaterial({ map: texture })
 	);
+
+
 	shadowMesh.position.y = 1;
 	shadowMesh.castShadow = true;
 	shadowMesh.receiveShadow = true;
-	sceneGroup.add( shadowMesh );
+	//sceneGroup.add( shadowMesh );
 	
 	let floorGeometry = new THREE.PlaneGeometry( 20,20 );
 	let floorMaterial = new THREE.ShadowMaterial();
