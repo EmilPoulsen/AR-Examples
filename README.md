@@ -5,6 +5,6 @@
 3. Clone the repo
 4. Open the folder in VS code
 5. Open integrated terminal in VS code
-6. Install the "http-server" npm package by entering the following command to the integrated terminal: `npm install http-server`
+6. Install the "http-server" npm package globally by entering the following command to the integrated terminal: `npm install http-server -g`
 7. Run `http-server .`
-8. Open localhost:8080/shadow in chrome
+8. Open `localhost:8080/shadow` in chrome
