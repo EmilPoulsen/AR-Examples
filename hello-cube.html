@@ -112,7 +112,7 @@ function initialize()
 		type: 'pattern', patternUrl: "data/hiro.patt",
 	})
 
-	let geometry1	= new THREE.CubeGeometry(1,1,1);
+	let geometry1	= new THREE.CubeGeometry(1,2,1);
 	let material1	= new THREE.MeshNormalMaterial({
 		transparent: true,
 		opacity: 0.5,
@@ -120,7 +120,7 @@ function initialize()
 	}); 
 	
 	mesh1 = new THREE.Mesh( geometry1, material1 );
-	mesh1.position.y = 0.5;
+	mesh1.position.y = 1;
 	
 	markerRoot1.add( mesh1 );
 }
