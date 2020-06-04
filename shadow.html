@@ -147,6 +147,9 @@ function initialize()
 					mesh0 = group.children[0];
 					mesh0.material.side = THREE.DoubleSide;
 					mesh0.position.y = 0.25;
+					//mesh0.rotation.x = 0.5;
+					//mesh0.rotation.y = Math.PI/2;//0.5;
+					//mesh0.rotation.z = 0.5;
 					mesh0.castShadow = true;
 					mesh0.receiveShadow = true;
 					//mesh0.scale.set(0.25,0.25,0.25);
@@ -176,7 +179,7 @@ function initialize()
 
 	
 	let light = new THREE.PointLight( 0xffffff, 1, 100 );
-	light.position.set( 0,4,0 ); // default; light shining from top
+	light.position.set( 2,5,2 ); // default; light shining from top
 	light.castShadow = true;
 	sceneGroup.add( light );
 	
