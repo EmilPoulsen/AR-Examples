@@ -203,7 +203,25 @@ function initialize()
 
 	
 	let light = new THREE.PointLight( 0xffffff, 1, 100 );
-	light.position.set( 2,5,2 ); // default; light shining from top
+
+	// Calculate the sun position based on a longitude (location) and hour/day of the year
+	lat = 51.1;
+	yd = 180;
+	h = 15;
+	r = 5.0;
+	let sunP = sunPosition(lat, yd, h, r);
+	sunX = sunP[0];
+	sunY = sunP[1];
+	sunZ = sunP[2];
+	ele = sunP[3];
+	azi = sunP[4];
+	console.log("sun x = " + sunX);
+	console.log("sun y = " + sunY);
+	console.log("sun z = " + sunZ);
+	console.log("sun ele = " + ele);
+	console.log("sun azi = " + azi);
+
+	light.position.set( sunX,sunY,sunZ ); // default; light shining from top
 	light.castShadow = true;
 	sceneGroup.add( light );
 	
@@ -248,6 +266,69 @@ function animate()
 	totalTime += deltaTime;
 	update();
 	render();
+}
+
+function sunPosition(lat, yd, h, r)
+{
+	/*
+    Calculate the hourly position of the sun, the azimuth and elevation
+    INPUTS:
+    lat   -- Latitude for project location [deg] 
+	yd    -- Day of the year [0-365]
+	h     -- Hour of the day [0-23]
+	r     -- Radius for sun Position in view [m]
+
+    OUTPUTS:
+
+	ele   -- Elevation of the sun [angle from horizon - rad]
+	azi   -- Azimuth of the sun [angle in plan - rad]
+
+	x, y, z -- World coordinates of Sun Position (y is vertical component in .js...)
+    
+    NOTES:
+    According to Tregenza, Daylighting, p. 261-262
+    */
+
+	sl = Math.sin(lat);
+	cl = Math.cos(lat);
+
+	pi = Math.PI;
+	
+	d = yd;
+    td = 2.*pi*d/365.; // Calculate the day angle
+    // Calculate the solar declination
+    dec = .006918-.399912*Math.cos(td)+.070257*Math.sin(td)-.006758*Math.cos(2*td)+.000907*Math.sin(2*td)-.002697*Math.cos(3*td)+.001480*Math.sin(3*td);
+    
+    sd = Math.sin(dec);
+    cdd = Math.cos(dec);
+    
+    // No check yet for true solar time
+    hh =  h;
+    ha = hh*pi/12.0; //  Calculate hour angle - works per 24h
+    sg = sl*sd-cl*cdd*Math.cos(ha); // Calculate the sin of solar elevation
+    if (sg < 0.) {sg = 0.}; // Machine precision correction
+    cg = Math.pow((1.-sg*sg),.5); // Calculate the cos of solar elevation
+    
+    ca = (-sl*sg+sd)/(cl*cg); // Calculate the cos of solar azimuth
+    if (ca < -1.) {ca = -1.};
+    if (ca > 1.) {ca = 1.};
+    sa = Math.pow((1.-ca*ca),.5); // Calculate the sin of the solar azimuth
+    
+    azi = Math.atan2(sa,ca); // Calculate the azimuth
+    
+    if (ha > pi) {azi = - azi};
+	ele = Math.atan2(sg,cg); // Calculate the elevation - atan makes sure that the elevation only stays positive
+	
+	// Convert the azimuth and elevation to Degrees
+	aziDegree = azi * (180/pi);
+	eleDegree = ele * (180/pi);
+
+	// Convert the sun position to global xyz coordinates
+	x = r * Math.cos(pi/2-azi) * Math.sin(ele);
+	y = r * Math.cos(ele);
+	z = r * Math.sin(pi/2-azi) * Math.sin(ele);
+
+    return [x,y,z, eleDegree, aziDegree];
 }
 
 </script>
