@@ -23,7 +23,7 @@
   Example created by Lee Stemkoski: https://github.com/stemkoski
   Based on the AR.js library and examples created by Jerome Etienne: https://github.com/jeromeetienne/AR.js/
 -->
-
+<input id="myInput" type="file" style="visibility:hidden" />
 
 <script>
 
@@ -53,6 +53,9 @@ var initializer = this;
 		this.explode = function() { 
 			// Define render logic ...
 		};
+		this.loadFile = function() { 
+       		document.getElementById('myInput').click();
+		}
 	};
 
 	text = new FizzyText();
@@ -64,6 +67,7 @@ var initializer = this;
 		gui.add(text, 'rotationX', 0, 5);
 		gui.add(text, 'rotationY', 0, 5);
 		gui.add(text, 'rotationZ', 0, 5);
+		gui.add(text, 'loadFile').name('Load obj file');
 		//gui.add(text, 'displayOutline');
 		//gui.add(text, 'explode');
 	};
